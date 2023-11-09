@@ -1,7 +1,6 @@
 import random
 import math
 
-''' You have 16 swing states '''
 swing_states_dict = {
     # "state": [electoral votes, (biden%, trump%, sample size)]
     "nv": [6, (46.5, 41, 500)],
@@ -22,7 +21,6 @@ swing_states_dict = {
     "tx": [38, (46.6, 47.4, 500)]
 }
 
-''' Z-Table of a normal distribution '''
 z_table = {
     # "z_score": area under the curve
     "0.1": 0.03983,
@@ -67,8 +65,6 @@ z_table = {
     "4.0": 0.49997
 }
 
-''' What is the margin of error given poll? '''
-
 
 def margin_of_error(_poll_data):
     z_score = 1.96  # for 95% confidence we use z-score of 1.96
@@ -81,9 +77,6 @@ def margin_of_error(_poll_data):
     return MoE
 
 
-''' Determine the z-score '''
-
-
 def z_score(_poll_data, _MoE):
     p_biden = _poll_data[0]
     p_trump = _poll_data[1]
@@ -94,15 +87,9 @@ def z_score(_poll_data, _MoE):
     return z_score
 
 
-''' Area under the curve given a z-score'''
-
-
 def area_under_curve(_z_score):
     dict_key = str(round(abs(_z_score), 1))
     return z_table[dict_key]
-
-
-''' Is biden winning in the polls '''
 
 
 def is_biden_leading(_poll_data):
@@ -114,9 +101,6 @@ def is_biden_leading(_poll_data):
         return False
 
 
-''' Bidens propabalistic chances of winning the states '''
-
-
 def biden_wins_state(_Biden_Leading, _AoC):
     if _Biden_Leading:
         return _AoC + 0.5
@@ -124,12 +108,8 @@ def biden_wins_state(_Biden_Leading, _AoC):
         return 1 - _AoC - 0.5
 
 
-''' Determine a winner propabalistically '''
-
-
 def biden_wins(_Chance_Biden_Wins_State):
     rand_number = random.random()
-    print(rand_number)
     if rand_number >= _Chance_Biden_Wins_State:
         return False
     else:
@@ -137,7 +117,7 @@ def biden_wins(_Chance_Biden_Wins_State):
 
 
 ''' Run the elections many times '''
-trials = 1
+trials = 100000
 biden_wins_counter = 0
 trump_wins_counter = 0
 for trial in range(trials):
@@ -154,10 +134,6 @@ for trial in range(trials):
             biden += data[0]
         else:
             trump += data[0]
-
-        print(
-            f'In {state} biden is winning {round(Chance_Biden_Wins_State, 2)} given a MoE of {round(MoE, 2)}, a z-score of {round(Z, 2)}, and z-table-number of {round(AoC, 2)}')
-
     if biden > trump:
         biden_wins_counter += 1
     else:
